@@ -1,0 +1,168 @@
+# Note: ACT creates a CVP username with the username and password defined in the
+# vEOS node.  Typically, this is cvpadmin/cvp123!
+veos:
+  username: cvpadmin
+  password: cvp123!
+  version: 4.30.5M
+
+cvp:
+  username: root
+  password: cvproot
+  version: 2024.1.1
+  instance: singlenode
+
+generic:
+  password: ansible
+  username: ansible
+  version: ubuntu-2204-lts
+
+nodes:
+  - L3DEVICE:
+      ip_addr: 192.168.0.11
+      node_type: veos
+      device_model: 7050SX3-96YC8
+  - SPINE1:
+      ip_addr: 192.168.0.12
+      node_type: veos
+      device_model: 7050SX3-96YC8
+  - SPINE2:
+      ip_addr: 192.168.0.13
+      node_type: veos
+      device_model: 7050SX3-96YC8
+  - LEAF1:
+      ip_addr: 192.168.0.14
+      node_type: veos
+      device_model: 7050SX3-96YC8
+  - LEAF2:
+      ip_addr: 192.168.0.15
+      node_type: veos
+      device_model: 7050SX3-96YC8
+  - LEAF3:
+      ip_addr: 192.168.0.16
+      node_type: veos
+      device_model: 7050SX-64
+  - LEAF4:
+      ip_addr: 192.168.0.17
+      node_type: veos
+      device_model: 7050SX-64
+  - HOSTA:
+      ip_addr: 192.168.0.19
+      node_type: veos
+      device_model: 7060CX-32S
+  - HOSTB:
+      ip_addr: 192.168.0.20
+      node_type: veos
+      device_model: 7060CX-32S
+  - HOSTC:
+      ip_addr: 192.168.0.21
+      node_type: veos
+      device_model: 7020TRA-48
+  - HOSTD:
+      ip_addr: 192.168.0.22
+      node_type: veos
+      device_model: 7020TRA-48
+  - CVP:
+      ip_addr: 192.168.0.5
+      node_type: cvp
+      auto_configuration: true
+  - AVD:
+      ip_addr: 192.168.0.100
+      node_type: generic
+      instance_type: xlarge
+
+links:
+
+##############################
+# L3_Device to SPINEs
+##############################
+
+  - connection:
+    - L3DEVICE:Ethernet1
+    - SPINE1:Ethernet5
+  - connection:
+    - L3DEVICE:Ethernet2
+    - SPINE2:Ethernet5
+
+##############################
+# SPINE to SPINE
+##############################
+
+  - connection:
+    - SPINE1:Ethernet47
+    - SPINE2:Ethernet47
+  - connection:
+    - SPINE1:Ethernet48
+    - SPINE2:Ethernet48
+
+##############################
+# SPINE1 to LEAFs
+##############################
+
+  - connection:
+    - SPINE1:Ethernet1
+    - LEAF1:Ethernet1
+  - connection:
+    - SPINE1:Ethernet2
+    - LEAF2:Ethernet1
+  - connection:
+    - SPINE1:Ethernet3
+    - LEAF3:Ethernet1
+  - connection:
+    - SPINE1:Ethernet4
+    - LEAF4:Ethernet1
+
+##############################
+# SPINE2 to LEAFs
+##############################
+
+  - connection:
+    - SPINE2:Ethernet1
+    - LEAF1:Ethernet2
+  - connection:
+    - SPINE2:Ethernet2
+    - LEAF2:Ethernet2
+  - connection:
+    - SPINE2:Ethernet3
+    - LEAF3:Ethernet2
+  - connection:
+    - SPINE2:Ethernet4
+    - LEAF4:Ethernet2
+
+##############################
+# LEAF1 to LEAF2
+##############################
+
+  - connection:
+    - LEAF1:Ethernet47
+    - LEAF2:Ethernet47
+  - connection:
+    - LEAF1:Ethernet48
+    - LEAF2:Ethernet48
+
+##############################
+# LEAF3 to LEAF4
+##############################
+
+  - connection:
+    - LEAF3:Ethernet47
+    - LEAF4:Ethernet47
+  - connection:
+    - LEAF3:Ethernet48
+    - LEAF4:Ethernet48
+
+##############################
+# LEAFs to HOSTs
+##############################
+
+  - connection:
+    - LEAF1:Ethernet3
+    - HOSTA:Ethernet3
+  - connection:
+    - LEAF2:Ethernet3
+    - HOSTB:Ethernet3
+  - connection:
+    - LEAF3:Ethernet3
+    - HOSTC:Ethernet3
+  - connection:
+    - LEAF4:Ethernet3
+    - HOSTD:Ethernet3

@@ -1,0 +1,90 @@
+---
+### group_vars/DC1_FABRIC.yml
+
+# Set the Fabric name - must match an Ansible Inventory Group
+
+fabric_name: DC1_FABRIC
+
+# Set design type to l2ls
+design:
+  type: l2ls
+
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified
+ansible_connection: ansible.netcommon.httapi
+#specifies we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: cvpadmin
+ansible_password: cvp123!
+
+# User escalation (to enable mode)
+ansible_becmoe: true
+ansible_become_method: enable
+
+# Use SSL (HTTPS)
+ansible_httpapi_validate_certs: false
+
+# Spine Switches (L2 only)
+spine: 
+  defaults:
+    platform: vEOS-lab
+    spanning_tree_mode: mstp
+    spanning_tree_priority: 4096
+    mlag_peer_ipv4_pool: 192.168.1.0/24
+    mlag_interfaces: [Ethernet47, Ethernet48]
+  node_groups:
+    - group: SPINES 
+      nodes:
+        - name: SPINE1 
+          id: 1
+          mgmt_ip: 192.168.0.12/24
+        - name: SPINE2
+          id: 2
+          mgmt_ip: 192.168.0.13/24
+
+# Leaf Switches
+leaf:
+  defaults:
+    platform: vEOS-lab
+    mlag_peer_ipv4_pool: 192.168.1.0/24
+    uplink_switches: [SPINE1, SPINE2]
+    uplink_interfaces: [Ethernet1, Ethernet2]
+    mlag_interfaces: [Ethernet47, Ethernet48]
+    spanning_tree_mode: mstp
+    spanning_tree_priority: 16384
+
+  node_groups:
+    - group: RACK1
+      mlag: true
+      filter:
+        tags: [bluezone, greenzone]
+      nodes:
+        - name: LEAF1
+          id: 1
+          mgmt_ip: 192.168.0.14/24
+          uplink_switch_interfaces: [Ethernet1, Ethernet1]
+        - name: LEAF2
+          id: 2
+          mgmt_ip: 192.168.0.15/24
+          uplink_switch_interfaces: [Ethernet2, Ethernet2]
+    - group: RACK2
+      mlag: true
+      filter:
+        tags: [bluezone, greenzone]
+      nodes:
+        - name: LEAF3
+          id: 3
+          mgmt_ip: 192.168.0.16/24
+          uplink_switch_interfaces: [Ethernet3, Ethernet3]
+        - name: LEAF4
+          id: 4
+          mgmt_ip: 192.168.0.17/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4]
+
+#### Override for vEOS/cEOS Lab Caveats ####
+p2p_uplinks_mtu: 1500
+
+# Documentation
+eos_designs_documentation:
+  connected_endpoints: true

@@ -1,0 +1,12 @@
+---
+### group_vars/DC1_NETWORK_PORTS.yml
+
+connected_endpoints_keys:
+  - key: servers
+    type: server
+  - key: firewalls
+    type: firewall
+  - key: routers
+    type: router
+
+port_profiles:

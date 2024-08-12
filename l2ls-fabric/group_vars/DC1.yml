@@ -1,0 +1,24 @@
+---
+### group_vars/DC1.yml
+
+aaa_authentication:
+  policies:
+    local:
+      allow_password: true
+
+local_users:
+  #username with no password configured
+  - name: arista
+    privilege: 15
+    role: network-admin
+    no_password: true
+  
+  #username with a password configured
+  - name: kishore
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$ujOLb6KFvaMidxzf$GDEfGApt1sNGTUCeyjjrliJ17CTtU4Lu8eKSVMsMp1yk2BH.W/tXnqGZl/AjjUlLVjP03KOhHVhmxkTYa/yNP/"
+
+aaa_authorization:
+  exec:
+    default: local 

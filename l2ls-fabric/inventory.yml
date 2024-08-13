@@ -1,6 +1,15 @@
 # inventory.yml
 DC1:
   children:
+    CVP:
+      hosts:
+        cv_server: 
+          ansible_host: 10.18.139.53
+          ansible_user: cvpadmin
+          ansible_password: cvp123!
+          ansible_httpapi_validate_certs: False
+          ansible_network_os: eos
+          ansible_connection: httpapi
     DC1_FABRIC:
       children:
         DC1_SPINES:
@@ -27,3 +36,14 @@ DC1:
       children:
         DC1_LEAFS:
         DC1_SPINES:
+    # Hosts are usually not managed by AVD but I am including below just as a test. But AVD usually does not manage the hosts configs
+    DC1_HOSTS:
+      hosts:
+        HOSTA:
+          ansible_host: 192.168.0.19
+        HOSTB:
+          ansible_host: 192.168.0.20
+        HOSTC:
+          ansible_host: 192.168.0.21
+        HOSTD:
+          ansible_host: 192.168.0.22

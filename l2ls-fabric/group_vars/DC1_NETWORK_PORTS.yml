@@ -66,5 +66,3 @@ firewalls:
         switch_ports: [Ethernet5, Ethernet5]
         switches: [SPINE1, SPINE2]
         profile: PP-FIREWALL
-        port-channel:
-          mode: active

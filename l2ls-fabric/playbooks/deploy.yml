@@ -1,0 +1,27 @@
+---
+# deploy.yml
+
+- name: Build configs
+  hosts: DC1_FABRIC
+  gather_facts: false
+  tasks:
+    - name: Generate AVD Structured Configurations and Fabric Documentation
+      ansible.builtin.import_role:
+        name: arista.avd.eos_designs
+    
+    - name: Generate Device Configurations and Documentation
+      ansible.builtin.import_role:
+        name: arista.avd.eos_cli_config_gen
+
+- name: Deploy config with CVP
+  hosts: CVP
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Deploy Configurations to Devices
+      ansible.builtin.import_role:
+        name: arista.avd.eos_config_deploy_cvp
+      vars:
+        configlets_prefix: 'avd'
+        execute_tasks: false
+        container_root: 'DC1_FABRIC'

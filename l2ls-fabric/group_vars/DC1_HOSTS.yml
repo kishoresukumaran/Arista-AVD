@@ -59,7 +59,7 @@ daemon_terminattr:
   cvauth:
     method: "token"
     token_file: "/tmp/token"
-  cvvrf: "MGMT"
+  cvvrf: "default"
 
 management_ssh:
   client_alive:

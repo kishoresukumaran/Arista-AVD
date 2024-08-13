@@ -1,0 +1,10 @@
+---
+# hosts-build.yml
+
+- name: Build Hosts Configs
+  hosts: DC1_HOSTS
+  gather_facts: false
+  tasks:
+    - name: Generate Device Configurations and Documentation
+      ansible.builtin.import_role:
+        name: arista.avd.eos_cli_config_gen

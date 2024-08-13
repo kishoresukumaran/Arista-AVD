@@ -1,0 +1,74 @@
+---
+### group_vars/DC1_HOSTS.yml
+
+# Set the Fabric name - must match an Ansible Inventory Group
+
+fabric_name: DC1_HOSTS
+
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified
+ansible_connection: ansible.netcommon.httpapi
+#specifies we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: cvpadmin
+ansible_password: cvp123!
+
+# User escalation (to enable mode)
+ansible_becmoe: true
+ansible_become_method: enable
+
+# Use SSL (HTTPS)
+ansible_httpapi_validate_certs: false
+
+aaa_authentication:
+  policies:
+    local:
+      allow_nopassword: true
+
+local_users:
+  - name: admin
+    disabled: true
+  #username with no password configured
+  - name: arista
+    privilege: 15
+    role: network-admin
+    no_password: true
+
+  #username with a password configured
+  - name: kishore
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$ujOLb6KFvaMidxzf$GDEfGApt1sNGTUCeyjjrliJ17CTtU4Lu8eKSVMsMp1yk2BH.W/tXnqGZl/AjjUlLVjP03KOhHVhmxkTYa/yNP/"
+
+  - name: cvpadmin
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$Thlnu6anttmnHstw$8UwrstXu24DHRYfAEgp/UITcym2KPqCGmKOuX/upnuxCqV8.9bb7N4cWgpgxtRGdRb75f81BrSdPA2TOl31VF/"
+
+ip_routing: true
+
+aaa_authorization:
+  exec:
+    default: local 
+
+daemon_terminattr:
+  smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
+  cvaddrs:
+    - 192.168.0.5:9910
+  cvauth:
+    method: "token"
+    token_file: "/tmp/token"
+  cvvrf: "MGMT"
+
+management_ssh:
+  client_alive:
+    interval: 120
+
+management_api_http:
+  enable_http: false
+  enable_https: true
+
+ip_name_servers:
+  - ip_address: 169.254.169.254
+    vrf: "default"

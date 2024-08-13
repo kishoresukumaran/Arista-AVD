@@ -36,14 +36,27 @@ DC1:
       children:
         DC1_LEAFS:
         DC1_SPINES:
-    # Hosts are usually not managed by AVD but I am including below just as a test. But AVD usually does not manage the hosts configs
-    DC1_HOSTS:
-      hosts:
-        HOSTA:
-          ansible_host: 192.168.0.19
-        HOSTB:
-          ansible_host: 192.168.0.20
-        HOSTC:
-          ansible_host: 192.168.0.21
-        HOSTD:
-          ansible_host: 192.168.0.22
+
+# Hosts are usually not managed by AVD but I am including below just as a test. But AVD usually does not manage the hosts configs
+DC1_HOSTS:
+  hosts:
+    HOSTA:
+      ansible_host: 192.168.0.19
+      management_interfaces:
+        - name: Management1
+          ip_address: 192.168.0.19/24
+    HOSTB:
+      ansible_host: 192.168.0.20
+      management_interfaces:
+        - name: Management1
+          ip_address: 192.168.0.20/24
+    HOSTC:
+      ansible_host: 192.168.0.21
+      management_interfaces:
+        - name: Management1
+          ip_address: 192.168.0.21/24
+    HOSTD:
+      ansible_host: 192.168.0.22
+      management_interfaces:
+        - name: Management1
+          ip_address: 192.168.0.22/24

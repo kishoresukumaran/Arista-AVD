@@ -1,0 +1,33 @@
+---
+
+fabric_name: FABRIC
+
+# various fabric settings
+
+# Enable VLAN aware bundles
+
+evpn_vlan_aware_bundles: false
+
+# Spine Switches
+
+spine:
+  defaults:
+    bgp_as: 65001
+    loopback_ipv4_pool: 192.168.101.0/24
+    bgp_defaults:
+      - 'no bgp default ipv4-unicast'
+      - 'distance bgp 20 200 200'
+    mlag: false
+  nodes:
+    - name: spine1
+      id: 11
+      mgmt_ip: 192.168.0.11/24
+    - name: spine2
+      id: 12
+      mgmt_ip: 192.168.0.12/24
+    - name: spine3
+      id: 13
+      mgmt_ip: 192.168.0.13/24
+
+# leaf switches. Most switches will be l3leaf not l2leaf
+

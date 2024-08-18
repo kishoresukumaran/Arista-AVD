@@ -4,6 +4,22 @@ fabric_name: FABRIC
 
 # various fabric settings
 
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified
+ansible_connection: ansible.netcommon.httpapi
+#specifies we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: cvpadmin
+ansible_password: cvp123!
+
+# User escalation (to enable mode)
+ansible_becmoe: true
+ansible_become_method: enable
+
+# Use SSL (HTTPS)
+ansible_httpapi_validate_certs: false
+
 # Enable VLAN aware bundles
 
 evpn_vlan_aware_bundles: false
@@ -31,3 +47,46 @@ spine:
 
 # leaf switches. Most switches will be l3leaf not l2leaf
 
+l3leaf:
+  defaults:
+    bgp_as: 65100-65199 # Gives a range which will be auto-assigned  
+    loopback_ipv4_pool: 192.168.101.0/24 # This is loopback0 (underlay)
+    vtep_loopback_ipv4_pool: 192.168.102.0/24 # This is loopback1 (VTEP)
+    uplink_interfaces: [Ethernet3, Ethernet4, Ethernet5] # Leaf uplinks
+    uplink_switches: [spine1, spine2, spine3] # Where the leaf uplinks go
+    uplink_ipv4_pool: 192.168.103.0/24
+    mlag_interfaces: [Ethernet1, Ethernet2] # mlag peer link
+    mlag_peer_ipv4_pool: 10.255.252.0/24 # mlag peer ips
+    mlag_peer_l3_ipv4_pool: 10.255.251.0/24 # iBGP peering between MLAG peers
+    virtual_router_mac_address: 00:1c:73:00:00:99 # The VMAC for anycast gateway
+    bgp_defaults:
+      - 'no bgp default ipv4-unicast'
+      - 'distance bgp 20 200 200'
+      - 'graceful restart restart-time 300'
+      - 'graceful-restart'
+    spanning_tree_mode: mstp # Spanning tree is still enabled even in EVPN setups
+    spanning_tree_priority: 16384
+    mlag: true # By default use MLAG
+  node_groups:
+    - group: mlag1
+      # bgp_as is automatically configured from that range, but can be overriden
+      nodes:
+        - name: leaf1
+          id: 1
+          mgmt_ip: 192.168.0.14/24
+          uplink_switch_interfaces: [Ethernet3, Ethernet3, Ethernet3]
+        - name: leaf2
+          id: 2
+          mgmt_ip: 192.168.0.15/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4, Ethernet4]
+    - group: mlag2
+      bgp_as: 65299 # Overriden automatic bgp_as allocation for host4/R1 peering
+      nodes:
+        - name: leaf1
+          id: 3
+          mgmt_ip: 192.168.0.16/24
+          uplink_switch_interfaces: [Ethernet5, Ethernet5, Ethernet5]
+        - name: leaf2
+          id: 4
+          mgmt_ip: 192.168.0.17/24
+          uplink_switch_interfaces: [Ethernet6, Ethernet6, Ethernet6]

@@ -62,7 +62,7 @@ l3leaf:
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
-      - 'graceful restart restart-time 300'
+      - 'graceful-restart restart-time 300'
       - 'graceful-restart'
     spanning_tree_mode: mstp # Spanning tree is still enabled even in EVPN setups
     spanning_tree_priority: 16384
@@ -90,3 +90,46 @@ l3leaf:
           id: 4
           mgmt_ip: 192.168.0.17/24
           uplink_switch_interfaces: [Ethernet6, Ethernet6, Ethernet6]
+
+local_users:
+  - name: admin
+    disabled: true
+  #username with no password configured
+  - name: arista
+    privilege: 15
+    role: network-admin
+    no_password: true
+
+  #username with a password configured
+  - name: kishore
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$ujOLb6KFvaMidxzf$GDEfGApt1sNGTUCeyjjrliJ17CTtU4Lu8eKSVMsMp1yk2BH.W/tXnqGZl/AjjUlLVjP03KOhHVhmxkTYa/yNP/"
+
+  - name: cvpadmin
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$eiPj6ckf4MPRuzlQ$Y/mN8pkzskK5LI1u0m11aUv0ObcRPBYKKzi.veuV2s5p.ieGHkUb.XoS8scRgOFtRtgu21wgdiq3yhswhOsf5."
+  
+daemon_terminattr:
+  smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
+  cvaddrs:
+    - 192.168.0.5:9910 
+  cvauth:
+    method: "token"
+    token_file: "/tmp/token"
+  cvvrf: "MGMT"
+
+ip_name_servers:
+  - ip_address: 169.254.169.254
+    vrf: "default"
+
+management_ssh:
+  client_alive:
+    interval: 120
+
+management_api_http:
+  enable_http: true
+  enable_https: true
+  enable_vrfs:
+    - name: MGMT

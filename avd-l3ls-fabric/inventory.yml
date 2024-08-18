@@ -1,6 +1,15 @@
 # inventory.yml
 DC1:
   children:
+    CVP:
+      hosts:
+        cv_server: 
+          ansible_host: 10.18.151.66
+          ansible_user: cvpadmin
+          ansible_password: cvp123!
+          ansible_httpapi_validate_certs: False
+          ansible_network_os: eos
+          ansible_connection: httpapi
     FABRIC:
       children:
         SPINES:

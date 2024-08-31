@@ -32,9 +32,8 @@ DC1:
               ansible_host: 192.168.0.17
     EVPN_SERVICES:
       children:
-        DC1_LEAFS:
-        DC1_SPINES:
-#    EVPN_PORTS:
-#      children:
-#        DC1_LEAFS:
-#        DC1_SPINES:
+        LEAFS:
+        SPINES:
+    ENDPOINT_CONNECT:
+      children:
+        LEAFS:

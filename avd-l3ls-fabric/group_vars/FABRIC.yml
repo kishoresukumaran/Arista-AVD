@@ -55,7 +55,7 @@ l3leaf:
     uplink_interfaces: [Ethernet3, Ethernet4, Ethernet5] # Leaf uplinks
     uplink_switches: [SPINE1, SPINE2, SPINE3] # Where the leaf uplinks go
     uplink_ipv4_pool: 192.168.103.0/24
-    mlag_interfaces: [Ethernet1, Ethernet2] # mlag peer link
+    mlag_interfaces: [Ethernet47, Ethernet48] # mlag peer link
     mlag_peer_ipv4_pool: 10.255.252.0/24 # mlag peer ips
     mlag_peer_l3_ipv4_pool: 10.255.251.0/24 # iBGP peering between MLAG peers
     virtual_router_mac_address: 00:1c:73:00:00:99 # The VMAC for anycast gateway

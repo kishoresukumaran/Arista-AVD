@@ -1,0 +1,15 @@
+- name: Deploy config with CVP
+  hosts: CVP
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Provision CVP with AVD configuration
+      ansible.builtin.import_role:
+        name: arista.avd.eos_config_deploy_cvp
+      vars:
+        configlets_prefix: 'avd'
+        execute_tasks: false
+        # apply_mode: strict 
+        state: present
+        cv_collection: v3
+        container_root: 'FABRIC'

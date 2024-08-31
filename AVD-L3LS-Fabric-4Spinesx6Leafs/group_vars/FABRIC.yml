@@ -1,0 +1,151 @@
+---
+
+fabric_name: FABRIC
+
+
+# various fabric settings
+
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified
+ansible_connection: ansible.netcommon.httpapi
+#specifies we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: cvpadmin
+ansible_password: cvp123!
+
+# User escalation (to enable mode)
+ansible_becmoe: true
+ansible_become_method: enable
+
+# Use SSL (HTTPS)
+ansible_httpapi_validate_certs: false
+
+# Enable VLAN aware bundles
+
+evpn_vlan_aware_bundles: false
+
+# Spine Switches
+
+spine:
+  defaults:
+    bgp_as: 65001
+    loopback_ipv4_pool: 192.168.101.0/24
+    bgp_defaults:
+      - 'no bgp default ipv4-unicast'
+      - 'distance bgp 20 200 200'
+    mlag: false
+  nodes:
+    - name: SPINE1
+      id: 11
+      mgmt_ip: 192.168.0.11/24
+    - name: SPINE2
+      id: 12
+      mgmt_ip: 192.168.0.12/24
+    - name: SPINE3
+      id: 13
+      mgmt_ip: 192.168.0.13/24
+    - name: SPINE4
+      id: 14
+      mgmt_ip: 192.168.0.14/24
+
+
+# leaf switches. Most switches will be l3leaf not l2leaf
+
+l3leaf:
+  defaults:
+    bgp_as: 65100-65199 # Gives a range which will be auto-assigned  
+    loopback_ipv4_pool: 192.168.101.0/24 # This is loopback0 (underlay)
+    vtep_loopback_ipv4_pool: 192.168.102.0/24 # This is loopback1 (VTEP)
+    uplink_interfaces: [Ethernet3, Ethernet4, Ethernet5, Ethernet6, Ethernet7, Ethernet8] # Leaf uplinks
+    uplink_switches: [SPINE1, SPINE2, SPINE3, SPINE4] # Where the leaf uplinks go
+    uplink_ipv4_pool: 192.168.103.0/24
+    mlag_interfaces: [Ethernet47, Ethernet48] # mlag peer link
+    mlag_peer_ipv4_pool: 10.255.252.0/24 # mlag peer ips
+    mlag_peer_l3_ipv4_pool: 10.255.251.0/24 # iBGP peering between MLAG peers
+    virtual_router_mac_address: 00:1c:73:00:00:99 # The VMAC for anycast gateway
+    bgp_defaults:
+      - 'no bgp default ipv4-unicast'
+      - 'distance bgp 20 200 200'
+      - 'graceful-restart restart-time 300'
+      - 'graceful-restart'
+    spanning_tree_mode: mstp # Spanning tree is still enabled even in EVPN setups
+    spanning_tree_priority: 16384
+    mlag: true # By default use MLAG
+  node_groups:
+    - group: mlag1
+      # bgp_as is automatically configured from that range, but can be overriden
+      nodes:
+        - name: LEAF1
+          id: 1
+          mgmt_ip: 192.168.0.15/24
+          uplink_switch_interfaces: [Ethernet3, Ethernet3, Ethernet3, Ethernet3]
+        - name: LEAF2
+          id: 2
+          mgmt_ip: 192.168.0.16/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4, Ethernet4, Ethernet4]
+    - group: mlag2
+      bgp_as: 65299 # Overriden automatic bgp_as allocation for host4/R1 peering
+      nodes:
+        - name: LEAF3
+          id: 3
+          mgmt_ip: 192.168.0.17/24
+          uplink_switch_interfaces: [Ethernet5, Ethernet5, Ethernet5, Ethernet5]
+        - name: LEAF4
+          id: 4
+          mgmt_ip: 192.168.0.18/24
+          uplink_switch_interfaces: [Ethernet6, Ethernet6, Ethernet6, Ethernet6]
+    - group: mlag3
+      # Overriden automatic bgp_as allocation for host4/R1 peering
+      nodes:
+        - name: LEAF5
+          id: 5
+          mgmt_ip: 192.168.0.19/24
+          uplink_switch_interfaces: [Ethernet7, Ethernet7, Ethernet7, Ethernet7]
+        - name: LEAF6
+          id: 6
+          mgmt_ip: 192.168.0.20/24
+          uplink_switch_interfaces: [Ethernet8, Ethernet8, Ethernet8, Ethernet8]
+
+local_users:
+  - name: admin
+    disabled: true
+  #username with no password configured
+  - name: arista
+    privilege: 15
+    role: network-admin
+    no_password: true
+
+  #username with a password configured
+  - name: kishore
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$ujOLb6KFvaMidxzf$GDEfGApt1sNGTUCeyjjrliJ17CTtU4Lu8eKSVMsMp1yk2BH.W/tXnqGZl/AjjUlLVjP03KOhHVhmxkTYa/yNP/"
+
+  - name: cvpadmin
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$eiPj6ckf4MPRuzlQ$Y/mN8pkzskK5LI1u0m11aUv0ObcRPBYKKzi.veuV2s5p.ieGHkUb.XoS8scRgOFtRtgu21wgdiq3yhswhOsf5."
+  
+daemon_terminattr:
+  smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
+  cvaddrs:
+    - 192.168.0.5:9910 
+  cvauth:
+    method: "token"
+    token_file: "/tmp/token"
+  cvvrf: "MGMT"
+
+#ip_name_servers:
+#  - ip_address: 169.254.169.254
+#    vrf: "default"
+
+management_ssh:
+  client_alive:
+    interval: 120
+
+management_api_http:
+  enable_http: true
+  enable_https: true
+  enable_vrfs:
+    - name: MGMT

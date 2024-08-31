@@ -136,9 +136,9 @@ daemon_terminattr:
     token_file: "/tmp/token"
   cvvrf: "MGMT"
 
-#ip_name_servers:
-#  - ip_address: 169.254.169.254
-#    vrf: "default"
+ip_name_servers:
+  - ip_address: 169.254.169.254
+    vrf: "default"
 
 management_ssh:
   client_alive:

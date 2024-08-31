@@ -1,0 +1,219 @@
+hostname: SPINE3
+is_deployed: true
+router_bgp:
+  as: '65001'
+  router_id: 192.168.101.13
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    maximum_routes: 12000
+    send_community: all
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+    next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  redistribute_routes:
+  - source_protocol: connected
+    route_map: RM-CONN-2-BGP
+  neighbors:
+  - ip_address: 192.168.103.5
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65100'
+    peer: LEAF1
+    description: LEAF1_Ethernet5
+  - ip_address: 192.168.103.13
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65100'
+    peer: LEAF2
+    description: LEAF2_Ethernet5
+  - ip_address: 192.168.103.21
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65299'
+    peer: LEAF3
+    description: LEAF3_Ethernet5
+  - ip_address: 192.168.103.29
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65299'
+    peer: LEAF4
+    description: LEAF4_Ethernet5
+  - ip_address: 192.168.103.37
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65104'
+    peer: LEAF5
+    description: LEAF5_Ethernet5
+  - ip_address: 192.168.103.45
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65104'
+    peer: LEAF6
+    description: LEAF6_Ethernet5
+  - ip_address: 192.168.101.1
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: LEAF1
+    description: LEAF1
+    remote_as: '65100'
+  - ip_address: 192.168.101.2
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: LEAF2
+    description: LEAF2
+    remote_as: '65100'
+  - ip_address: 192.168.101.3
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: LEAF3
+    description: LEAF3
+    remote_as: '65299'
+  - ip_address: 192.168.101.4
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: LEAF4
+    description: LEAF4
+    remote_as: '65299'
+  - ip_address: 192.168.101.5
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: LEAF5
+    description: LEAF5
+    remote_as: '65104'
+  - ip_address: 192.168.101.6
+    peer_group: EVPN-OVERLAY-PEERS
+    peer: LEAF6
+    description: LEAF6
+    remote_as: '65104'
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+spanning_tree:
+  mode: none
+local_users:
+- name: admin
+  disabled: true
+- name: arista
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$eiPj6ckf4MPRuzlQ$Y/mN8pkzskK5LI1u0m11aUv0ObcRPBYKKzi.veuV2s5p.ieGHkUb.XoS8scRgOFtRtgu21wgdiq3yhswhOsf5.
+- name: kishore
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$ujOLb6KFvaMidxzf$GDEfGApt1sNGTUCeyjjrliJ17CTtU4Lu8eKSVMsMp1yk2BH.W/tXnqGZl/AjjUlLVjP03KOhHVhmxkTYa/yNP/
+vrfs:
+- name: MGMT
+  ip_routing: false
+management_interfaces:
+- name: Management1
+  description: oob_management
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.0.13/24
+  gateway: null
+  type: oob
+management_api_http:
+  enable_vrfs:
+  - name: MGMT
+  enable_https: true
+ethernet_interfaces:
+- name: Ethernet3
+  peer: LEAF1
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF1_Ethernet5
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 192.168.103.4/31
+- name: Ethernet4
+  peer: LEAF2
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF2_Ethernet5
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 192.168.103.12/31
+- name: Ethernet5
+  peer: LEAF3
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF3_Ethernet5
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 192.168.103.20/31
+- name: Ethernet6
+  peer: LEAF4
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF4_Ethernet5
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 192.168.103.28/31
+- name: Ethernet7
+  peer: LEAF5
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF5_Ethernet5
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 192.168.103.36/31
+- name: Ethernet8
+  peer: LEAF6
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF6_Ethernet5
+  shutdown: false
+  mtu: 9214
+  type: routed
+  ip_address: 192.168.103.44/31
+loopback_interfaces:
+- name: Loopback0
+  description: EVPN_Overlay_Peering
+  shutdown: false
+  ip_address: 192.168.101.13/32
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.101.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3

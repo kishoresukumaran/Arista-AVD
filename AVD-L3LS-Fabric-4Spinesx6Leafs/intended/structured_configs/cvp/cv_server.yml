@@ -1,0 +1,49 @@
+---
+cvp_devices:
+  - fqdn: LEAF1
+    parentContainerName: LEAFS
+    configlets:
+      - avd_LEAF1
+  - fqdn: LEAF2
+    parentContainerName: LEAFS
+    configlets:
+      - avd_LEAF2
+  - fqdn: LEAF3
+    parentContainerName: LEAFS
+    configlets:
+      - avd_LEAF3
+  - fqdn: LEAF4
+    parentContainerName: LEAFS
+    configlets:
+      - avd_LEAF4
+  - fqdn: LEAF5
+    parentContainerName: LEAFS
+    configlets:
+      - avd_LEAF5
+  - fqdn: LEAF6
+    parentContainerName: LEAFS
+    configlets:
+      - avd_LEAF6
+  - fqdn: SPINE1
+    parentContainerName: SPINES
+    configlets:
+      - avd_SPINE1
+  - fqdn: SPINE2
+    parentContainerName: SPINES
+    configlets:
+      - avd_SPINE2
+  - fqdn: SPINE3
+    parentContainerName: SPINES
+    configlets:
+      - avd_SPINE3
+  - fqdn: SPINE4
+    parentContainerName: SPINES
+    configlets:
+      - avd_SPINE4
+cvp_containers:
+  FABRIC:
+    parentContainerName: Tenant
+  LEAFS:
+    parentContainerName: FABRIC
+  SPINES:
+    parentContainerName: FABRIC

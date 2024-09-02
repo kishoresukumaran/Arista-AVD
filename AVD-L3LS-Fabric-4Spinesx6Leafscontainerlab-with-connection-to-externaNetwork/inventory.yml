@@ -1,0 +1,45 @@
+# inventory.yml
+DC1:
+  children:
+    CVP:
+      hosts:
+        cv_server: 
+          ansible_host: 10.18.158.33
+          ansible_user: cvpadmin
+          ansible_password: cvp123!
+          ansible_httpapi_validate_certs: False
+          ansible_network_os: eos
+          ansible_connection: httpapi
+    FABRIC:
+      children:
+        SPINES:
+          hosts:
+            SPINE1:
+              ansible_host: 192.168.0.11
+            SPINE2:
+              ansible_host: 192.168.0.12
+            SPINE3:
+              ansible_host: 192.168.0.13
+            SPINE4:
+              ansible_host: 192.168.0.14
+        LEAFS:
+          hosts:
+            LEAF1:
+              ansible_host: 192.168.0.15
+            LEAF2:
+              ansible_host: 192.168.0.16
+            LEAF3:
+              ansible_host: 192.168.0.17
+            LEAF4:
+              ansible_host: 192.168.0.18
+            LEAF5:
+              ansible_host: 192.168.0.19
+            LEAF6:
+              ansible_host: 192.168.0.20
+    EVPN_SERVICES:
+      children:
+        LEAFS:
+        SPINES:
+    ENDPOINT_CONNECT:
+      children:
+        LEAFS:

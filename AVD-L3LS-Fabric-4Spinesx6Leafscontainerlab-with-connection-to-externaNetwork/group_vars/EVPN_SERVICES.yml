@@ -18,3 +18,12 @@ tenants:
             name: DMZ
             enabled: true
             ip_address_virtual: 10.1.30.1/24
+        l3_interfaces:
+          - interfaces: [Ethernet9]
+            ip_addresses: [10.1.5.1/24]
+            nodes: [LEAF6]
+            enabled: true
+        bgp_peers:
+          - ip_address: 10.1.5.254
+            remote_as: 1
+            nodes: [LEAF6]

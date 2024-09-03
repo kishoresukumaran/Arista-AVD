@@ -91,7 +91,7 @@ cvp_configlets:
     \     rd 192.168.101.1:10\n      route-target import evpn 10:10\n      route-target
     export evpn 10:10\n      router-id 192.168.101.1\n      neighbor 10.255.251.1
     peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
   avd_LEAF2: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr
     -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata
@@ -185,7 +185,7 @@ cvp_configlets:
     \     rd 192.168.101.2:10\n      route-target import evpn 10:10\n      route-target
     export evpn 10:10\n      router-id 192.168.101.2\n      neighbor 10.255.251.0
     peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
   avd_LEAF3: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr
     -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata
@@ -282,7 +282,7 @@ cvp_configlets:
     \     rd 192.168.101.3:10\n      route-target import evpn 10:10\n      route-target
     export evpn 10:10\n      router-id 192.168.101.3\n      neighbor 10.255.251.5
     peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
   avd_LEAF4: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr
     -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata
@@ -379,7 +379,7 @@ cvp_configlets:
     \     rd 192.168.101.4:10\n      route-target import evpn 10:10\n      route-target
     export evpn 10:10\n      router-id 192.168.101.4\n      neighbor 10.255.251.4
     peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
   avd_LEAF5: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr
     -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata
@@ -473,7 +473,7 @@ cvp_configlets:
     \     rd 192.168.101.5:10\n      route-target import evpn 10:10\n      route-target
     export evpn 10:10\n      router-id 192.168.101.5\n      neighbor 10.255.251.9
     peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
   avd_LEAF6: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr
     -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata
@@ -501,7 +501,8 @@ cvp_configlets:
     \  ip address 192.168.103.45/31\n!\ninterface Ethernet6\n   description P2P_LINK_TO_SPINE4_Ethernet8\n
     \  no shutdown\n   mtu 9214\n   no switchport\n   ip address 192.168.103.47/31\n!\ninterface
     Ethernet7\n   description host4_Ethernet2\n   no shutdown\n   channel-group 7
-    mode active\n!\ninterface Ethernet47\n   description MLAG_PEER_LEAF5_Ethernet47\n
+    mode active\n!\ninterface Ethernet9\n   no shutdown\n   no switchport\n   vrf
+    vrfA\n   ip address 10.1.5.1/24\n!\ninterface Ethernet47\n   description MLAG_PEER_LEAF5_Ethernet47\n
     \  no shutdown\n   channel-group 47 mode active\n!\ninterface Ethernet48\n   description
     MLAG_PEER_LEAF5_Ethernet48\n   no shutdown\n   channel-group 47 mode active\n!\ninterface
     Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n   ip address
@@ -565,9 +566,10 @@ cvp_configlets:
     \     no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS
     activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf vrfA\n
     \     rd 192.168.101.6:10\n      route-target import evpn 10:10\n      route-target
-    export evpn 10:10\n      router-id 192.168.101.6\n      neighbor 10.255.251.8
-    peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    export evpn 10:10\n      router-id 192.168.101.6\n      neighbor 10.1.5.254 remote-as
+    1\n      neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute
+    connected\n      !\n      address-family ipv4\n         neighbor 10.1.5.254 activate\n!\nmanagement
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
   avd_SPINE1: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr
     -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata
@@ -626,7 +628,7 @@ cvp_configlets:
     \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   address-family evpn\n
     \     neighbor EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no
     neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
   avd_SPINE2: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr
     -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata
@@ -685,7 +687,7 @@ cvp_configlets:
     \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   address-family evpn\n
     \     neighbor EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no
     neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
   avd_SPINE3: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr
     -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata
@@ -744,7 +746,7 @@ cvp_configlets:
     \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   address-family evpn\n
     \     neighbor EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no
     neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
   avd_SPINE4: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr
     -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata
@@ -803,7 +805,7 @@ cvp_configlets:
     \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   address-family evpn\n
     \     neighbor EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no
     neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n!\nmanagement
-    api http-commands\n   protocol https\n   protocol http\n   no shutdown\n   !\n
+    api http-commands\n   protocol http\n   protocol https\n   no shutdown\n   !\n
     \  vrf MGMT\n      no shutdown\n!\nmanagement ssh\n   client-alive interval 120\n!\nend\n"
 cvp_topology:
   FABRIC:

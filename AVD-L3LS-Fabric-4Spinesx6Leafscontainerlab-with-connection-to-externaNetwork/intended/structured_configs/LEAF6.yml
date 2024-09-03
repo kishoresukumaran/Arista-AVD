@@ -114,6 +114,12 @@ router_bgp:
     neighbors:
     - ip_address: 10.255.251.8
       peer_group: MLAG-IPv4-UNDERLAY-PEER
+    - ip_address: 10.1.5.254
+      remote_as: '1'
+    address_family_ipv4:
+      neighbors:
+      - ip_address: 10.1.5.254
+        activate: true
     updates:
       wait_install: true
   vlans:
@@ -324,6 +330,12 @@ ethernet_interfaces:
   mtu: 9214
   type: routed
   ip_address: 192.168.103.47/31
+- name: Ethernet9
+  peer_type: l3_interface
+  ip_address: 10.1.5.1/24
+  shutdown: false
+  type: routed
+  vrf: vrfA
 - name: Ethernet7
   peer: host4
   peer_interface: Ethernet2

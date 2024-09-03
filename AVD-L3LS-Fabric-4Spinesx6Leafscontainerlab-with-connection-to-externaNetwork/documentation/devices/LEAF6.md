@@ -312,6 +312,7 @@ vlan 4094
 | Ethernet4 | P2P_LINK_TO_SPINE2_Ethernet8 | routed | - | 192.168.103.43/31 | default | 9214 | False | - | - |
 | Ethernet5 | P2P_LINK_TO_SPINE3_Ethernet8 | routed | - | 192.168.103.45/31 | default | 9214 | False | - | - |
 | Ethernet6 | P2P_LINK_TO_SPINE4_Ethernet8 | routed | - | 192.168.103.47/31 | default | 9214 | False | - | - |
+| Ethernet9 | - | routed | - | 10.1.5.1/24 | vrfA | - | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -349,6 +350,12 @@ interface Ethernet7
    description host4_Ethernet2
    no shutdown
    channel-group 7 mode active
+!
+interface Ethernet9
+   no shutdown
+   no switchport
+   vrf vrfA
+   ip address 10.1.5.1/24
 !
 interface Ethernet47
    description MLAG_PEER_LEAF5_Ethernet47
@@ -650,6 +657,7 @@ ASN Notation: asplain
 | 192.168.103.44 | 65001 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 192.168.103.46 | 65001 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 10.255.251.8 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | vrfA | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
+| 10.1.5.254 | 1 | vrfA | - | - | - | - | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -759,8 +767,12 @@ router bgp 65104
       route-target export evpn 10:10
       router-id 192.168.101.6
       update wait-install
+      neighbor 10.1.5.254 remote-as 1
       neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected
+      !
+      address-family ipv4
+         neighbor 10.1.5.254 activate
 ```
 
 ## BFD
